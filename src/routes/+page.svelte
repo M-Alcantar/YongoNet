@@ -5,28 +5,12 @@
 </script>
 
 <svelte:head>
-    <title>I just wanna make a button</title>
+    <title>YongoNet</title>
 </svelte:head>
 
-<!-- svelte-ignore a11y_consider_explicit_label -->
-<button
-    style="width:20%;"
-    class="absolute top-36 left-36 rounded-lg py-2"
-    class:bg-red-300={showDino}
-    class:bg-green-300={!showDino}
-    on:click=
-        {
-            () => {showDino = !showDino}
-        }
->
-    {#if showDino}
-        Nvm I'm scared
-    {:else}
-        Ok I wanna see a cool dinosaur
-    {/if}
-</button>
+<header>YongoNet</header>
 
-<img src={dinoImg} alt="RAAAAAAARRRRRRRRRRRR" 
-    style="height:500px;" 
-    class="absolute top-12 right-50" 
-    hidden={!showDino} />
+<br>
+<p style="text-align:center">
+    <a href="https://www.youtube.com/watch?v=gvf4cnAXYDc" target="_blank" rel="noopener noreferrer">START CODING</a>
+</p>
