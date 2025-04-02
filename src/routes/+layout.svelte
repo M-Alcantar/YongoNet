@@ -32,6 +32,7 @@
 	<ul>
 		<li><a href="/">Home</a></li>
 		<li><a href="/playground">Playground</a></li>
+		<li><a href="/Register">Sign up</a></li>
 	</ul>
 </nav>
 
