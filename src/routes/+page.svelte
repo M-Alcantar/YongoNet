@@ -1,7 +1,5 @@
 <script>
-    import dinoImg from '$lib/assets/dinosaur.jpg';
-
-    let showDino = false;
+    
 </script>
 
 <svelte:head>
