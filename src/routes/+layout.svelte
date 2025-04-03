@@ -6,13 +6,13 @@
 
 <svelte:head>
     <style>
-        body {background-color: rgb(171,210,247);}
+        body {background-color: rgb(3, 20, 43);}
 		header {
   			padding: 8px;
   			text-align: center;
   			font-size: 35px;
 			font-weight: bold;
-  			color: black;
+  			color: white;
 		}
 		nav {
 			float: left;

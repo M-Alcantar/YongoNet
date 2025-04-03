@@ -5,18 +5,18 @@
     $: password = showPassword ? 'text' : 'password';
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 dark:bg-gray-800 sm:px-6 lg:px-8">
-    <div class="w-full max-w-md space-y-8">
+<div class="flex min-h-screen items-center justify-center bg-transparent px-4 py-12 sm:px-6 lg:px-8">
+    <div class="w-full max-w-md space-y-5">
         <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-                Register
+            <h2 class="mt-6 text-center text-3xl font-bold text-white">
+                Join YongoNet
             </h2>
         </div>
-        <form action="?/register" method="POST" class="mt-8 space-y-6">
-            <div class="-space-y-px rounded-md shadow-sm">
+        <form action="?/register" method="POST" class="space-y-4">
+            <div class="space-y-2 rounded-md inset-shadow-sm py-6 bg-[#091d38]">
                 <div>
                     <label for="username" class="sr-only">Username</label>
-                    <input
+                    <input class="flex w-7/8 mx-auto rounded-lg outline-none border-none bg-gray-900 text-white"
                         id="username"
                         name="username"
                         type="text"
@@ -26,7 +26,7 @@
                 </div>
                 <div>
                     <label for="password" class="sr-only">Password</label>
-                    <input
+                    <input class="flex w-7/8 mx-auto rounded-lg outline-none border-none bg-gray-900 text-white"
                         id="password"
                         name="password"
                         type={password}
@@ -34,14 +34,14 @@
                         placeholder="Password"
                     />
                 </div>
-                <div class="flex items-center py-5">
+                <div class="flex w-7/8 mx-auto items-center pt-0.5">
                     <input
                         type="checkbox"
                         bind:checked={showPassword}
                         id="showPassword"
-                        class="form-checkbox h-5 w-5 text-indigo-600"
+                        class="form-checkbox ml-1.5 h-4.5 w-4.5 text-[#0087e8] border-none focus:ring-transparent focus:ring-offset-0 bg-gray-50 rounded-xs"
                     />
-                    <label for="showPassword" class="ml-2 text-sm text-gray-700 hover:cursor-pointer dark:text-gray-200">
+                    <label for="showPassword" class="ml-2 text-sm text-white hover:cursor-pointer">
                         Show Password
                     </label>
                 </div>
@@ -54,9 +54,9 @@
             <div>
                 <button
                     type="submit"
-                    class="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-indigo-700 dark:hover:bg-indigo-800 dark:focus:ring-indigo-700"
+                    class="group relative flex w-3/4 justify-center rounded-md mx-auto my-4 bg-[#0087e8] px-4 py-2 text-base font-semibold text-white hover:bg-[#046bbf] focus:ring-offset-0 focus:ring-transparent"
                 >
-                    Register
+                    Sign Up
                 </button>
             </div>
         </form>

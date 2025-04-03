@@ -34,6 +34,7 @@ const register: Action = async ({ request }) => {
         return fail(500, { error: 'Internal server error' });
     }
 
+    console.log(`New user registered: ${ username }`)
     return redirect(303, '../');
 };
 
