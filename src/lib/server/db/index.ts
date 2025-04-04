@@ -1,8 +1,9 @@
-import db from '$lib/server/db/database.js';
+import db from '../db/database.js';
+import type { SessionInfo } from '../db/types.js';
 import bcrypt from 'bcryptjs';
 
 export async function usernameTaken(username: string): Promise<boolean> {
-    const existingUser = await db`select username from users where username like ${ username }`
+    const existingUser = await db`select username from users where username = ${ username }`
 
     return existingUser.length ? true : false;
 }
@@ -14,7 +15,8 @@ export async function createUser(username: string, password: string): Promise<vo
         username: username,
         password_hash: passwordHash,
     }
-      
+    
+    // probably should add some try/catch 
     await db`insert into users (username, password_hash) values (${ username }, ${ passwordHash })`
 }
 
@@ -33,17 +35,29 @@ export async function checkUserCredentials(username: string, password: string): 
     }
 }
 
-export async function getUserID(username: string): Promise<string> {
-    const userRow = await db`select user_id from users where username like ${ username }`
+export async function insertDbSession(sid: string, sessionInfo: SessionInfo) {
+    const sessionData = JSON.stringify(sessionInfo);
+    // try/catch
+    await db`insert into sessions (ses_id, ses_data) values (${ sid }, ${ sessionData })`
+}
 
-    if (!userRow.length) {
-        return "";
+export async function deleteDbSession(sid: string) {
+    // try/catch
+    await db`delete from sessions where ses_id = ${ sid }`
+}
+
+export async function getDbSession(sid: string): Promise<SessionInfo | undefined> {
+    const sessionData = await db`select ses_data from sessions where ses_id = ${ sid }`
+
+    if (!sessionData.length) {
+        return undefined;
     } else {
-        let userID = userRow.at(0)
-        if (!userID) {
-            return "";
+        let sessionRow = sessionData.at(0)
+        if (typeof sessionRow === 'undefined') {
+            return undefined;
         } else { 
-            return userID.user_id;
+            const data = JSON.parse(sessionRow.ses_data);
+            return data as SessionInfo;
         }
     }
 }

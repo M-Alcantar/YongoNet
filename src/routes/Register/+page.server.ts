@@ -1,6 +1,7 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Action, Actions, PageServerLoad } from './$types.ts';
 import { usernameTaken, createUser } from '$lib/server/db/index.js';
+import { performLogin } from '$lib/server/session/index.js';
 
 export const prerender = false;
 export const load: PageServerLoad = async (session) => {
@@ -11,7 +12,7 @@ export const load: PageServerLoad = async (session) => {
     return {};
 };
 
-const register: Action = async ({ request }) => {
+const register: Action = async ({ request, cookies }) => {
     const data = await request.formData();
     const username = data.get('username');
     const password = data.get('password');
@@ -31,12 +32,13 @@ const register: Action = async ({ request }) => {
         return fail(400, { passLen: true })
     }
 
-    try {
-        if (await usernameTaken(username)) {
-            return fail(400, { userExists: true });
-        }
+    if (await usernameTaken(username)) {
+        return fail(400, { userExists: true });
+    }
 
+    try {
         await createUser(username, password);
+        await performLogin(cookies, username);
     } catch (error) {
         console.error('Error during user registration:', error);
         return fail(500, { error: 'Internal server error' });
