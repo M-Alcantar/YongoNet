@@ -3,12 +3,12 @@
 </script>
 
 <svelte:head>
-    <title>YongoNet</title>
+    <title>Welcome to YongoNet!</title>
 </svelte:head>
-
-<header>YongoNet</header>
 
 <br>
 <p style="text-align:center">
-    <a href="https://www.youtube.com/watch?v=gvf4cnAXYDc" target="_blank" rel="noopener noreferrer">START CODING</a>
+    <a href="https://www.youtube.com/watch?v=gvf4cnAXYDc" class="text-white" target="_blank" rel="noopener noreferrer">
+        START CODING
+    </a>
 </p>

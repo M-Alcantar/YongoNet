@@ -1,11 +1,10 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Action, Actions, PageServerLoad } from './$types.ts';
-import bcrypt from 'bcryptjs';
-import db from '$lib/database.js';
+import { usernameTaken, createUser } from '$lib/server/db/index.js';
 
 export const prerender = false;
 export const load: PageServerLoad = async (session) => {
-    var sessionData = session.cookies.get('session');
+    var sessionData = session.cookies.get('sid');
     if (sessionData) {
         return redirect(303, '/');
     }
@@ -17,15 +16,24 @@ const register: Action = async ({ request }) => {
     const username = data.get('username');
     const password = data.get('password');
 
-    if (typeof username !== 'string' || typeof password !== 'string' || !username || !password) {
+    if (!username) {
+        return fail(400, { nameEmpty: true })
+    }
+
+    if (typeof username !== 'string' || typeof password !== 'string') {
         return error(400, 'Username and Password must be a string');
     }
 
-    try {
-        const existingUser = await db`select username from users where username like ${ username }`
+    if (username.length > 64) {
+        return fail(400, { nameLen: true })
+    }
+    if (password.length < 8 || password.length > 50) {
+        return fail(400, { passLen: true })
+    }
 
-        if (existingUser.length) {
-            return fail(400, { user: true });
+    try {
+        if (await usernameTaken(username)) {
+            return fail(400, { userExists: true });
         }
 
         await createUser(username, password);
@@ -37,16 +45,5 @@ const register: Action = async ({ request }) => {
     console.log(`New user registered: ${ username }`)
     return redirect(303, '../');
 };
-
-async function createUser(username: string, password: string) {
-    const passwordHash = await bcrypt.hash(password, 12);
-
-    const new_user = {
-        username: username,
-        password_hash: passwordHash,
-    }
-      
-    await db`insert into users (username, password_hash) values (${ username }, ${ passwordHash })`
-}
 
 export const actions: Actions = { register };

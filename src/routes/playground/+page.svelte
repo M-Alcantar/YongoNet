@@ -8,8 +8,6 @@
     <title>The Playground</title>
 </svelte:head>
 
-<header>The Playground</header>
-
 <button
     style="width:20%;color:white;cursor:pointer"
     class="absolute top-36 left-36 rounded-lg py-2"
