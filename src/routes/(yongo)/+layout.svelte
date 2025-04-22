@@ -1,8 +1,10 @@
 <script lang="ts">
+    import Loader from '$lib/Loader.svelte';
 	import type { Snippet } from 'svelte';
 	import '../../app.css';
 	import type { LayoutServerData } from './$types.js';
 
+	let loading = $state(false);
 	let { data, children }: { data: LayoutServerData, children: Snippet<[]> } = $props();
 </script>
 
@@ -19,7 +21,8 @@
 	  		<div>
 				{#if data?.username}
 				<p>Hello {data.username}! | <a 
-					href="/logout" data-sveltekit-preload-data="off" data-sveltekit-reload>
+					href="/logout" data-sveltekit-preload-data="off" data-sveltekit-reload
+					onclick={() => {loading = !loading}}>
 						Log out
 					</a>
 				</p>
@@ -32,5 +35,8 @@
 	</nav>
 </header>
 
+{#if loading}
+    <Loader></Loader>
+{/if}
 
 {@render children()}
