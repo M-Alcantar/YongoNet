@@ -9,12 +9,17 @@
 </script>
 
 <header>
-	<nav class="flex float-top px-4 py-3 items-center text-white bg-[#091d38] rounded-b-2xl" aria-label="main navigation">
+	<nav class="flex float-top h-[10lvh] px-4 py-3 items-center text-white bg-[#091d38] rounded-b-2xl shadow-sm" aria-label="main navigation">
 	  	<div class="max-w-md pl-2 pr-10">
 			<a href="/" class="text-[35px] font-semibold">YongoNet</a>
 	  	</div>
 	  	<div class="flex-1 mt-1">
-		  	<a href="/playground" class="text-[20px]">Playground</a>
+			<div>
+				<a href="/playground" class="text-[20px]">Playground</a>
+				{#if data?.username}
+					<a href="/messages" class="text-[20px] ml-8">Messages</a>
+				{/if}
+			</div>
 	  	</div>
   
 	  	<div class="mr-2">

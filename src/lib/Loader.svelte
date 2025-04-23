@@ -2,15 +2,11 @@
 
 </script>
 
-<div class="fixed w-full h-full z-[1000]">
+<div class="absolute top-0 w-full h-full z-[1000]" style="background-color: rgba(0,0,0,0.3)">
     <span class="circle" style="--size: 65px; --color: white; --duration: 1.2s"></span>
 </div>
 
 <style>
-    div {
-        background-color: rgb(0 0 0 / 30%);
-    }
-
     .circle {
         height: var(--size);
         width: var(--size);

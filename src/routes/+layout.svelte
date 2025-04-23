@@ -16,6 +16,7 @@
 		<li><a href="/playground">Playground</a></li>
 		<li><a href="/register">Sign up</a></li>
 		<li><a href="/login">Log in</a></li>
+		<li><a href="/messages">Messages</a></li>
 	</ul>
 </nav>
 
