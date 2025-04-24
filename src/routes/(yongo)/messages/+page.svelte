@@ -1,19 +1,31 @@
-<script>
-    let showAbout = $state(false);
-    function toggleAbout() {
-        showAbout = !showAbout;
-    }
+<script lang="ts">
+    import Loader from '$lib/Loader.svelte';
+    import type { ActionData } from './$types.js';
+    export let form: ActionData;
+    import { page } from '$app/state';
+    let current_url = page.url.href.split('/').pop() || '/';
+
+    let showAbout = (current_url === "addChat") ? true : false;
+    let loading = false;
 </script>
 
 <svelte:head>
     <title>Messages</title>
 </svelte:head>
 
+{#if loading}
+    <Loader></Loader>
+{/if}
+
 <div class="flex h-[90lvh]">
     <div class="float-left w-xs max-w-1/2 h-full pl-5 py-5 space-y-2 bg-transparent text-white">
         <div class="flex mb-3 items-end px-3 font-bold">
             <p class="flex-1 text-[20px]">Messages</p>
-            <button class="text-[18px] hover:cursor-pointer" onclick={toggleAbout} aria-label="New conversation">+</button>
+            <button class="text-[18px] hover:cursor-pointer" 
+                on:click={ () => {showAbout = !showAbout} } 
+                aria-label="New conversation"
+                title="New conversation">+
+            </button>
         </div>
 
         <div class="bg-[#091d38] rounded-md inset-shadow-xs/40 px-5 py-3">
@@ -37,25 +49,58 @@
 {#if showAbout}
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div class="fixed inset-0 flex justify-center items-center z-[1000]" style="background-color: rgba(0,0,0,0.3)" onclick={toggleAbout}>
-        <div class="bg-[#091d38] rounded-xl p-6 w-11/12 max-w-md shadow-lg text-white" onclick={e => e.stopPropagation()}>
-            <h2 class="text-xl font-bold mb-4">Oh you wanna find someone huh?</h2>
-            <p class="text-justify space-y-">
-                Good Frickin Luck
-                <br>
-                <br>
-            </p>
-
-            <div class="mt-4 text-sm leading-relaxed">
-                <strong>Referencias:</strong><br>
-                El pepe. <a href="https://www.youtube.com/watch?v=gvf4cnAXYDc" class="underline" target="_blank" rel="noopener noreferrer">Ver PDF</a>
-            </div>
-            <button
-                class="mt-6 px-4 py-2 rounded bg-[#0087e8] hover:bg-[#046bbf] hover:cursor-pointer text-white font-semibold"
-                onclick={toggleAbout}
+    <div class="fixed inset-0 flex justify-center items-center z-[500]" style="background-color: rgba(0,0,0,0.3)" on:click={ () => {showAbout = !showAbout} }>
+        <div class="bg-[#091d38] rounded-xl p-6 w-11/12 max-w-md shadow-lg text-white" on:click={ (e) => e.stopPropagation() }>
+            <form 
+                action="?/addChat" method="POST"
+                on:submit={ () => {loading = !loading} }
             >
-                Cancel
-            </button>
+                <div>
+                    <h2 class="text-xl font-bold mb-4">Start a new conversation</h2>
+                    <div>
+                        <label for="username" class="sr-only">Username</label>
+                        <input class="flex w-7/8 mx-auto rounded-lg outline-none border-none bg-gray-900 text-white"
+                            id="username"
+                            name="username"
+                            type="text"
+                            required
+                            placeholder="Username"
+                        />
+                    </div>
+                    {#if form?.userDoesntExist}
+                        <div class="flex w-7/8 mx-auto">
+                            <p class="error -mt-1 text-sm text-red-500">User doesn't exist.</p>
+                        </div>
+                    {/if}
+                    {#if form?.nameEmpty}
+                        <div class="flex w-7/8 mx-auto">
+                            <p class="error -mt-1 text-sm text-red-500">Field cannot be empty.</p>
+                        </div>
+                    {/if}
+                    {#if form?.sameUser}
+                        <div class="flex w-7/8 mx-auto">
+                            <p class="error -mt-1 text-sm text-red-500">Username can't be yours.</p>
+                        </div>
+                    {/if}
+
+                    <div class="mt-4 text-sm leading-relaxed">
+                        <strong>Referencias:</strong><br>
+                        El pepe. <a href="https://www.youtube.com/watch?v=gvf4cnAXYDc" class="underline" target="_blank" rel="noopener noreferrer">Ver PDF</a>
+                    </div>
+                    <button
+                        type="submit"
+                        class="mt-6 px-4 py-2 rounded bg-[#0087e8] hover:bg-[#046bbf] hover:cursor-pointer text-white font-semibold" 
+                    >
+                        Add
+                    </button>
+                    <button
+                        class="mt-6 px-4 py-2 rounded bg-[#0087e8] hover:bg-[#046bbf] hover:cursor-pointer text-white font-semibold"
+                        on:click={ () => {showAbout = !showAbout} } 
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 {/if}

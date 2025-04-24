@@ -61,3 +61,10 @@ export async function getDbSession(sid: string): Promise<SessionInfo | undefined
         }
     }
 }
+
+export async function createChat(user1:string, user2: string): Promise<string> {
+    let url = ""
+    // try/catch
+    //await db`insert into chat_logs (url, user_1, user_2) values (${ url }, ${ user1 }, ${ user2 })`
+    return url;
+}

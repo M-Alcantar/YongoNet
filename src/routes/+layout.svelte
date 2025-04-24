@@ -10,6 +10,7 @@
     </style>
 </svelte:head>
 
+<!-- Dev navbar -->
 <nav class="flex w-3/20 bg-[#969696]/40 p-[20px] pl-[40px] absolute bottom-0 left-0 ">
 	<ul class="p-0 list-disc">
 		<li><a href="/">Home</a></li>
