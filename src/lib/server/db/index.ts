@@ -1,5 +1,5 @@
 import db from '../db/database.js';
-import type { SessionInfo } from '../db/types.js';
+import type { SessionInfo, ContactInfo } from '../db/types.js';
 import bcrypt from 'bcryptjs';
 
 export async function usernameTaken(username: string): Promise<boolean> {
@@ -21,7 +21,7 @@ export async function createUser(username: string, password: string): Promise<vo
 }
 
 export async function checkUserCredentials(username: string, password: string): Promise<boolean> {
-    const realUser = await db`select password_hash from users where username like ${ username }`
+    const realUser = await db`select password_hash from users where username = ${ username }`
 
     if (!realUser.length) {
         return false;
@@ -62,9 +62,17 @@ export async function getDbSession(sid: string): Promise<SessionInfo | undefined
     }
 }
 
-export async function createChat(user1:string, user2: string): Promise<string> {
-    let url = ""
+export async function insertDbChat(user1: string, user2: string, url: string) {
     // try/catch
-    //await db`insert into chat_logs (url, user_1, user_2) values (${ url }, ${ user1 }, ${ user2 })`
-    return url;
+    await db`insert into chat_logs (user1, user2, url) values (${ user1 }, ${ user2 }, ${ url })`
+}
+
+export async function getDbContacts(user: string) {
+    const contactData = await db`select user2 as username, url as chat_url, date_created from chat_logs where user1 = ${ user }
+                                 union
+                                 select user1 as username, url as chat_url, date_created from chat_logs where user2 = ${ user }`
+
+    const data = JSON.parse(JSON.stringify(contactData));
+
+    return data as ContactInfo[];
 }

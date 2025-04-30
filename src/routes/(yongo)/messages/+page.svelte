@@ -1,8 +1,11 @@
 <script lang="ts">
     import Loader from '$lib/Loader.svelte';
-    import type { ActionData } from './$types.js';
-    export let form: ActionData;
     import { page } from '$app/state';
+    import type { ActionData, PageServerData } from './$types.js';
+
+    export let data: PageServerData;
+    export let form: ActionData;
+
     let current_url = page.url.href.split('/').pop() || '/';
 
     let showAbout = (current_url === "addChat") ? true : false;
@@ -28,12 +31,13 @@
             </button>
         </div>
 
-        <div class="bg-[#091d38] rounded-md inset-shadow-xs/40 px-5 py-3">
-            <p>Mensagem 1</p>
-        </div>
-        <div class="bg-[#091d38] rounded-md inset-shadow-xs/40 px-5 py-3">
-            <p>Mensagem 2</p>
-        </div>
+        {#if data.contacts}
+            {#each data.contacts as contact}
+                <div class="bg-[#091d38] rounded-md inset-shadow-xs/40 px-5 py-3">
+                    <p>{contact.username}</p>
+                </div>
+            {/each}
+        {/if}
     </div>
 
     <div class="flex-auto h-full p-5 bg-transparent">
@@ -56,10 +60,10 @@
                 on:submit={ () => {loading = !loading} }
             >
                 <div>
-                    <h2 class="text-xl font-bold mb-4">Start a new conversation</h2>
+                    <h2 class="text-xl font-bold text-center mb-4">Start a new conversation</h2>
                     <div>
                         <label for="username" class="sr-only">Username</label>
-                        <input class="flex w-7/8 mx-auto rounded-lg outline-none border-none bg-gray-900 text-white"
+                        <input class="w-full mx-auto rounded-lg outline-none border-none bg-gray-900 text-white"
                             id="username"
                             name="username"
                             type="text"
@@ -68,17 +72,17 @@
                         />
                     </div>
                     {#if form?.userDoesntExist}
-                        <div class="flex w-7/8 mx-auto">
+                        <div class="w-full mt-2 mx-auto">
                             <p class="error -mt-1 text-sm text-red-500">User doesn't exist.</p>
                         </div>
                     {/if}
                     {#if form?.nameEmpty}
-                        <div class="flex w-7/8 mx-auto">
+                        <div class="w-full mt-2 mx-auto">
                             <p class="error -mt-1 text-sm text-red-500">Field cannot be empty.</p>
                         </div>
                     {/if}
                     {#if form?.sameUser}
-                        <div class="flex w-7/8 mx-auto">
+                        <div class="w-full mt-2 mx-auto">
                             <p class="error -mt-1 text-sm text-red-500">Username can't be yours.</p>
                         </div>
                     {/if}
