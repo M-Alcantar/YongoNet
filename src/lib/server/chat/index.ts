@@ -20,13 +20,18 @@ async function checkUrlExists(url: string) {
 
 export async function createChat(user1: string, user2: string): Promise<string> {
     let url = ""
+    let dir = "src/lib/assets/chat-logs/"
+
+    if (!fs.existsSync(dir)) {
+        fs.mkdir(dir, (err) => { if (err) throw err; })
+    }
 
     do {
         url = getChatUrl();
     } while (await checkUrlExists(url));
 
-    const full_url = "src/lib/assets/chat-logs/" + url + ".json"
-    fs.mkdir(full_url, { recursive: true }, (err) => {
+    const full_url = dir + url + ".json"
+    fs.writeFile(full_url, "", (err) => {
         if (err) {
             console.error('Error creating chat log:', err);
             throw err;
