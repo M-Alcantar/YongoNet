@@ -26,10 +26,10 @@ export async function createChat(user1: string, user2: string): Promise<string> 
     } while (await checkUrlExists(url));
 
     const full_url = "src/lib/assets/chat-logs/" + url + ".json"
-    fs.writeFile(full_url, "", (err) => {
+    fs.mkdir(full_url, { recursive: true }, (err) => {
         if (err) {
             console.error('Error creating chat log:', err);
-            return;
+            throw err;
         }
     });
 
