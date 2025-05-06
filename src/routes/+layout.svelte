@@ -15,6 +15,7 @@
 	<ul class="p-0 list-disc">
 		<li><a href="/">Home</a></li>
 		<li><a href="/playground">Playground</a></li>
+		<li><a href="/playground2">Playground 2</a></li>
 		<li><a href="/register">Sign up</a></li>
 		<li><a href="/login">Log in</a></li>
 		<li><a href="/messages">Messages</a></li>
