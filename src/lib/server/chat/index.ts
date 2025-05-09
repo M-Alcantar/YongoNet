@@ -1,14 +1,18 @@
 import fs from 'node:fs';
 import { randomBytes} from 'node:crypto';
 import { insertDbChat, getDbContacts } from '../db/index.js';
+import type { MessageObj } from '../db/types.js';
 import { getRequestEvent } from '$app/server';
+
+let zeroMessage : MessageObj[] = [ { sender: "", datetime: 0, message: { text: "", media: "" } } ]
+let dir = "src/lib/assets/chat-logs/"
 
 function getChatUrl(): string {
     return randomBytes(12).toString('hex');
 }
 
 async function checkUrlExists(url: string) {
-    const full_url = "src/lib/assets/chat-logs/" + url + ".json";
+    const full_url = dir + url + ".json";
 
     try {
         await fs.promises.access(full_url, fs.constants.F_OK);
@@ -20,7 +24,6 @@ async function checkUrlExists(url: string) {
 
 export async function createChat(user1: string, user2: string): Promise<string> {
     let url = ""
-    let dir = "src/lib/assets/chat-logs/"
 
     if (!fs.existsSync(dir)) {
         fs.mkdir(dir, (err) => { if (err) throw err; })
@@ -57,4 +60,21 @@ export async function getContacts() {
     } catch {
         return;
     }
+}
+
+export async function retrieveMessages(chatUrl: string) {
+    if (!(await checkUrlExists(chatUrl))) {
+        return;
+    }
+
+    const full_url = dir + chatUrl + ".json"
+    let messageData: MessageObj[] = zeroMessage
+    try {
+        const data = await fs.promises.readFile(full_url)
+        messageData = JSON.parse(data.toString())
+    } catch(err) {
+        throw err;
+    }
+    
+    return messageData;
 }
