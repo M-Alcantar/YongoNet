@@ -19,6 +19,7 @@
 				{#if data?.username}
 					<a href="/messages" class="text-[20px] ml-8">Messages</a>
 				{/if}
+				<a href="/playground2" class="text-[20px] ml-8">Playground 2</a>
 			</div>
 	  	</div>
   
