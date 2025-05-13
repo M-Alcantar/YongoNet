@@ -4,6 +4,12 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+	server : {
+		host: '10.12.23.196',
+		port: 5173,
+		allowedHosts: true,
+	},
+
 	plugins: [tailwindcss(), sveltekit()],
 	test: {
 		workspace: [
