@@ -1,7 +1,6 @@
 <script>
 	let files = $state();
 
-	const authorizedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
 
 	$effect(() => {
 		if (files) {
@@ -20,6 +19,11 @@
 <svelte:head>
     <title>The Playground TWO BABY!</title>
 </svelte:head>
+
+<form method="post" enctype="multipart/form-data">
+	<input type="file" name="file" />
+	<button>Upload</button>
+  </form>  
 
 <label style="width:20%;color:white;cursor:pointer" for="avatar">Upload a picture:</label>
 <input accept="image/png, image/jpeg" bind:files id="avatar" name="avatar" type="file" />
