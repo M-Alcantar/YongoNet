@@ -30,22 +30,6 @@
     class="absolute top-30 right-70 h-[500px] spinnin" 
     hidden={!showDino} />
 
-
-    <form method="post" enctype="multipart/form-data">
-        <div class="group">
-          <label for="file">Upload your MEGA file!!</label>
-          <input
-            type="file"
-            id="file"
-            name="fileToUpload"
-            accept={authorizedExtensions.join(',')}
-            required
-          />
-        </div>
-      
-        <button type="submit">Submit</button>
-      </form>
-
 <style>
     .spinnin {
         animation: 2s linear 0s infinite normal none running rotate;

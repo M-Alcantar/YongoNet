@@ -21,19 +21,20 @@
 </svelte:head>
 
 <form method="post" enctype="multipart/form-data">
-	<input type="file" name="file" />
-	<button>Upload</button>
+	<label style="width:20%;color:green;"> Upload Jeer!
+	<input type="file" name="file" /></label>
+	<button> <label style="width:20%;color:white;cursor:pointer">Upload</label> </button>
   </form>  
 
-<label style="width:20%;color:white;cursor:pointer" for="avatar">Upload a picture:</label>
+<label style="width:20%;color:red;cursor:pointer" for="avatar">Upload a picture:</label>
 <input accept="image/png, image/jpeg" bind:files id="avatar" name="avatar" type="file" />
 
-<label style="width:20%;color:white;cursor:pointer" for="many">Upload multiple files of any type:</label>
+<label style="width:20%;color:red;cursor:pointer" for="many">Upload multiple files of any type:</label>
 <input bind:files id="many" multiple type="file" />
 
 {#if files}
-	<h2> <label style="width:20%;color:white;cursor:pointer">Selected files:</label></h2>
+	<h2> <label style="width:20%;color:red;cursor:pointer">Selected files:</label></h2>
 	{#each Array.from(files) as file}
-		<p> <label style="width:20%;color:white;cursor:pointer">{file.name} ({file.size} bytes)</label></p>
+		<p> <label style="width:20%;color:red;cursor:pointer">{file.name} ({file.size} bytes)</label></p>
 	{/each}
 {/if}
