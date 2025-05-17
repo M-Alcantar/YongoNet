@@ -4,14 +4,11 @@ import { usernameTaken } from '$lib/server/db/index.js';
 import { createChat, getContacts } from '$lib/server/chat/index.js';
 
 export const prerender = false;
-export const load: PageServerLoad = async ({ cookies, locals }) => {
+export const load: PageServerLoad = async ({ cookies }) => {
     var sessionData = cookies.get('sid');
-    if (!sessionData || !locals.username) {
+    if (!sessionData) {
         return redirect(303, '/');
     }
-    return {
-        contacts: await getContacts()
-    };
 };
 
 const addChat: Action = async ({ request, locals }) => {
@@ -34,6 +31,14 @@ const addChat: Action = async ({ request, locals }) => {
 
     if (!await usernameTaken(username)) {
         return fail(400, { userDoesntExist: true });
+    }
+
+    if (contacts) {
+        for (const contact of contacts) {
+            if (contact.username === username) {
+                return fail(400, { chatExists: true })
+            }
+        }
     }
 
     try {
