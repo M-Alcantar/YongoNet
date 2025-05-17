@@ -20,8 +20,9 @@
     <title>The Playground TWO BABY!</title>
 </svelte:head>
 
+
 <form method="post" enctype="multipart/form-data">
-	<label style="width:20%;color:green;"> Upload Jeer!
+	<label style="width:20%;color:green;"> | Upload Jeer! (This is the forms) |
 	<input type="file" name="file" /></label>
 	<button> <label style="width:20%;color:white;cursor:pointer">Upload</label> </button>
   </form>  
