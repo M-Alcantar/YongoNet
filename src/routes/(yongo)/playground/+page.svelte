@@ -25,9 +25,9 @@
     {/if}
 </button>
 
-<img src={dinoImg} alt="RAAAAAAARRRRRRRRRRRR" 
-    class="absolute top-30 right-70 h-[500px] spinnin" 
-    hidden={!showDino} />
+<img src={dinoImg} alt="RAAAAAAARRRRRRRRRRRR" title="RAAAAAAARRRRRRRRRRRR" 
+    class="absolute top-30 right-70 h-[500px] spinnin" hidden={!showDino} 
+/>
 
 <style>
     .spinnin {

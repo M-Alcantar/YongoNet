@@ -20,7 +20,7 @@
 {/if}
 
 <div class="flex h-[90lvh]">
-    <div class="float-left w-xs max-w-1/2 h-full pl-5 py-5 space-y-2 bg-transparent text-white">
+    <div class="float-left w-3/14 max-w-1/2 h-full pl-5 py-5 space-y-2 bg-transparent text-white">
         <div class="flex mb-3 items-end px-3 font-bold">
             <p class="flex-1 text-[20px]">Messages</p>
             <button class="text-[18px] hover:cursor-pointer" 
@@ -42,7 +42,7 @@
         {/if}
     </div>
 
-    <div class="flex-auto h-full p-5 bg-transparent">
+    <div class="flex-auto w-11/14 min-w-1/2 h-full p-5 bg-transparent">
         <div class="h-full bg-[#091d38] rounded-md inset-shadow-xs/40">
             {@render children()}
         </div>

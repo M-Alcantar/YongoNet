@@ -1,6 +1,7 @@
 test-results
 node_modules
 chat-logs
+chat-media
 
 # Output
 .output
