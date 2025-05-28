@@ -3,9 +3,24 @@
 
     let { data }: PageProps = $props();
 
+    let messages = data.messages;
+
+    var container: HTMLElement | null;
+    var observer: MutationObserver;
+
+    function containerLoad(){
+        container = document.getElementById("main-chat-container");
+        observer = new MutationObserver(scrollToBottom);
+        if (container) observer.observe(container, {childList: true});
+    }
+    function scrollToBottom() {
+        if (container) container.scrollTop = container.scrollHeight;
+    }
+
     function getMediaUrl(media: string) {
         return "../src/lib/assets/chat-media/" + media;
     }
+
     function isImage(media: string) {
         var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
 		if (allowedExtensions.exec(media)) {
@@ -16,30 +31,30 @@
     }
 </script>
 
-<div class="flex flex-col h-full w-full px-5 py-3">
-    <div class="flex flex-col flex-1 w-full min-w-md overflow-y-auto scroll-snap-y-container">
-        {#await data.messages}
-            <p class="text-sm text-white text-center">Loading messages...</p>
-        {:then}
-            {#if data.messages}
-                {#each data.messages as message}
-                    <div class="w-auto mb-2 align-middle text-pretty">
-                        <span class="p-1 bg-[#03142b] text-sm text-white rounded-sm align-middle">{message.sender}</span>
-                        {#if message.message.text !== ""}
-                            <p class="w-full text-white text-md" title={new Date(message.datetime * 1000).toLocaleString()}>
-                                {message.message.text}
-                            </p>
+<div class="flex flex-col h-full w-full p-3">
+    <div class="flex flex-col-reverse flex-1 w-full min-w-md overflow-y-auto scroll-snap-y-container"
+        id="main-chat-container" onloadeddata={containerLoad}>
+        {#if messages}
+            {#each messages.reverse() as message}
+                <div class="w-auto mb-2 align-middle text-pretty">
+                    <span class="p-1 bg-[#03142b] text-sm text-white rounded-sm align-middle">{message.sender}</span>
+                    {#if message.message.text !== ""}
+                        <p class="w-full p-0.5 text-white text-md" title={new Date(message.datetime * 1000).toLocaleString()}>
+                            {message.message.text}
+                        </p>
+                    {/if} 
+                    {#if message.message.media !== ""}
+                        {#if isImage(message.message.media)}
+                            <img src={getMediaUrl(message.message.media)} 
+                                class="max-w-1/2 min-w-[50px] p-0.5 mt-1 rounded-md" alt=""
+                                title={new Date(message.datetime * 1000).toLocaleString()}/>
                         {/if}
-                        {#if message.message.media !== ""}
-                            {#if isImage(message.message.media)}
-                                <img src={getMediaUrl(message.message.media)} 
-                                    class="max-w-1/2 min-w-[50px] mt-1 rounded-md" alt=""/>
-                            {/if}
-                        {/if}
-                    </div>
-                {/each}
-            {/if}
-        {/await}
+                    {/if}
+                </div>
+            {/each}
+        {/if}
     </div>
-    <div class="flex flex-none w-full rounded-md h-1/15 bg-[#969696]/40 text-white items-center mt-2 px-3">Send a massage...</div>
+    <div class="flex flex-none w-full rounded-md h-1/15 bg-[#969696]/40 text-white items-center mt-2 px-3">
+        Send a massage...
+    </div>
 </div>
