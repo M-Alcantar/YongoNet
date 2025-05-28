@@ -1,5 +1,6 @@
 import db from '../db/database.js';
-import type { SessionInfo, ContactInfo } from '../db/types.js';
+import type { SessionInfo } from '../db/types.js';
+import type { ContactInfo } from '$lib/types/types.js';
 import bcrypt from 'bcryptjs';
 
 export async function usernameTaken(username: string): Promise<boolean> {
