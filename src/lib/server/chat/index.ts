@@ -1,10 +1,13 @@
 import fs from 'node:fs';
 import { randomBytes} from 'node:crypto';
 import { insertDbChat, getDbContacts } from '../db/index.js';
-import type { MessageObj } from '../db/types.js';
+import type { MessageObj } from '$lib/types/types.js';
 import { getRequestEvent } from '$app/server';
 
-let zeroMessage : MessageObj[] = [ { sender: "", datetime: 0, message: { text: "", media: "" } } ]
+let socketArray: WebSocket[] = []
+let socketListeners: Boolean[] = []
+
+let zeroMessage: MessageObj[] = [ { sender: "", datetime: 0, message: { text: "", media: "" } } ]
 let dir = "src/lib/assets/chat-logs/"
 
 function getChatUrl(): string {
@@ -77,4 +80,14 @@ export async function retrieveMessages(chatUrl: string) {
     }
     
     return messageData;
+}
+
+export async function saveNewMessages(messages: MessageObj[], chatUrl: string) {
+    const full_url = dir + chatUrl + ".json"
+    try {
+        await fs.promises.writeFile(full_url, JSON.stringify(messages))
+    } catch(err) {
+        console.error('Error saving chat log:', err);
+        throw err;
+    }
 }
