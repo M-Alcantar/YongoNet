@@ -2,15 +2,17 @@ import tailwindcss from '@tailwindcss/vite';
 import { svelteTesting } from '@testing-library/svelte/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import mkcert from "vite-plugin-mkcert";
 
 export default defineConfig({
 	server : {
 		host: 'localhost',
 		port: 5173,
 		allowedHosts: true,
+		https: true,
 	},
 
-	plugins: [tailwindcss(), sveltekit()],
+	plugins: [tailwindcss(), sveltekit(), mkcert()],
 	test: {
 		workspace: [
 			{

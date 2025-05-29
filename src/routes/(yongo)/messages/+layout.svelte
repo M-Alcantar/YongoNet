@@ -34,7 +34,7 @@
         {#if data.contacts}
             {#each data.contacts as contact}
                 <a href="/messages/{contact.chat_url}">
-                    <button class="w-full px-5 py-3 rounded-md inset-shadow-xs/40 bg-[#091d38] hover:cursor-pointer">
+                    <button class="w-full px-5 py-3 mb-1 rounded-md inset-shadow-xs/40 bg-[#091d38] hover:cursor-pointer">
                         <p class="text-left">{contact.username}</p>
                     </button>
                 </a>

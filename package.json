@@ -1,6 +1,6 @@
 {
 	"name": "yongonet",
-	"version": "0.0.1",
+	"version": "0.1.1",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
@@ -74,6 +74,7 @@
 		"bcryptjs": "^3.0.2",
 		"express": "^5.1.0",
 		"postgres": "^3.4.5",
+		"vite-plugin-mkcert": "^1.17.8",
 		"ws": "^8.18.2"
 	}
 }

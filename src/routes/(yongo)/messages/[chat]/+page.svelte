@@ -3,15 +3,26 @@
     import { onMount, onDestroy } from 'svelte';
     import { connectWebSocket } from '$lib/sockets/index.js';
     import type { MessageObj } from '$lib/types/types.js';
+	import { afterNavigate } from '$app/navigation';
 
     let { data }: PageProps = $props();
+    let chat = $derived(data.chat);
 
-    let messages: MessageObj[] = $state<MessageObj[]>([]);
-    if (data.messages) messages = data.messages;
+    let messages: MessageObj[] = $state<MessageObj[]>(data.messages ?? []);
     let socket: WebSocket;
 
     onMount(() => {
-        socket = connectWebSocket(messages, data.chat);
+        socket = connectWebSocket(messages, chat);
+    });
+
+    afterNavigate(() => {
+        messages = data.messages ?? [];
+        if (socket) socket.close();
+        socket = connectWebSocket(messages, chat);
+
+        return () => {
+            socket?.close();
+        };
     });
 
     onDestroy(() => {
@@ -20,13 +31,12 @@
 
     let newText = $state("");
     let newMedia = "";
-    let username = "";
-    if (data.username) username = data.username;
+    let username = data.username ?? "";
     
     function handleSend() {
 		if (newText.trim() || newMedia !== "") {
             const newMessage: MessageObj = { sender: username, datetime: Math.floor(Date.now() / 1000), message: { text: newText, media: newMedia } };
-			socket.send(JSON.stringify({ chatUrl: data.chat, msgType: 'msg', message: newMessage }));
+			socket.send(JSON.stringify({ chatUrl: chat, msgType: 'msg', message: newMessage }));
             messages.push(newMessage);
 			newText = "";
             newMedia = "";

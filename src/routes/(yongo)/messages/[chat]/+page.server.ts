@@ -1,5 +1,5 @@
-import { error, fail, redirect } from '@sveltejs/kit';
-import type { Action, Actions, PageServerLoad } from './$types.ts';
+import { redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types.ts';
 import { retrieveMessages } from '$lib/server/chat/index.js';
 
 export const prerender = false;
