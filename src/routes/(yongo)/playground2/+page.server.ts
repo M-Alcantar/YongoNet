@@ -4,6 +4,7 @@ import type { Action, ActionData } from './$types.ts';
 let { form, children }: { form: ActionData, children: Snippet<[]> } = $props();
 import { writeFile } from 'node:fs/promises';
 import { extname } from 'path';
+import { error, fail, redirect } from '@sveltejs/kit';
 
 export const prerender = false;
 
@@ -14,16 +15,16 @@ const addFile: Action = async ({request}) => {
     const filename = `/src/lib/assets/uploads/${crypto.randomUUID()}${extname(uploadedFile?.name)}`;
     await writeFile(filename, Buffer.from(await uploadedFile?.arrayBuffer()));
     return { success: true };
-  };
+  }
 
 
-  const addChat: Action = async ({ request, locals }) => {
+  /**const addFile: Action = async ({ request, locals }) => {
     const data = await request.formData();
-    const username = data.get('username');
-    const thisUser = locals.username;
+    const uploadedFile = data.get('file');
+    const fileName = `/src/lib/assets/uploads/${crypto.randomUUID()}${extname(uploadedFile?.name)}`;
     const contacts = await getContacts();
 
-    if (!username || !thisUser) {
+    if (!fileName) {
         return fail(400, { nameEmpty: true })
     }
 
@@ -48,8 +49,8 @@ const addFile: Action = async ({request}) => {
     }
 
     try {
-        const chatLog = await createChat(thisUser, username);
-        console.log(`New chat from ${ thisUser } and ${ username } at ${ chatLog }`)
+        const fileLog = await addFile;
+        console.log(`Added file at ${fileName}`)
     } catch (error) {
         console.error('Error during chat creation:', error);
         return fail(500, { error: 'Internal server error' });
@@ -58,4 +59,4 @@ const addFile: Action = async ({request}) => {
     return redirect(303, '/messages');
 };
 
-export const actions: Actions = { addChat };
+export const actions: Actions = { addFile };*/

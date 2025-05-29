@@ -21,9 +21,9 @@
 </svelte:head>
 
 
-<form method="post" enctype="multipart/form-data">
+<form action="?upload" method="post" enctype="multipart/form-data">
 	<label style="width:20%;color:green;"> | Upload Jeer! (This is the forms) |
-	<input type="file" name="file" /></label>
+	<input type="file" name="file" id="file"  /></label>
 	<button> <label style="width:20%;color:white;cursor:pointer">Upload</label> </button>
   </form>  
 
