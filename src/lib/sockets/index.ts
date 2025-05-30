@@ -4,7 +4,7 @@ export function connectWebSocket(
     messages: MessageObj[],
     chatUrl: string
 ) {
-    const socket = new WebSocket("ws://localhost:5000");
+    const socket = new WebSocket("ws://192.168.1.69:5000"); // your own ip here
     socket.onopen = () => {
         socket.send(JSON.stringify({ msgType: 'join', chatUrl }));
     };

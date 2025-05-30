@@ -9,4 +9,3 @@ export const load: PageServerLoad = async (event) => {
         userIp: ipv4
     };
 };
-
