@@ -29,7 +29,7 @@ export const POST = async ({ request }) => {
     }
 
     try {
-        const fileName = fileEntry.name || 'uploaded_file';
+        let fileName = fileEntry.name || 'uploaded_file';
         const fileExtension = extname(fileName).toLowerCase();
         const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.pdf', '.txt', 
                                    '.docx', '.xlsx', '.mp3', '.wav', '.flac', '.avi',
@@ -70,21 +70,29 @@ export const POST = async ({ request }) => {
             });
         }
 
-        // Use static/uploads for better accessibility
         const uploadDir = join(process.cwd(), 'src/lib/assets/chat-media');
         if (!existsSync(uploadDir)) {
             mkdirSync(uploadDir, { recursive: true });
         }
 
-        const uniqueFilename = `${crypto.randomUUID()}${fileExtension}`;
-        const filePath = join(uploadDir, uniqueFilename);
+        // check until the name isnt already taken
+        let filePath = join(uploadDir, fileName);
+        let nameExists = existsSync(filePath);
+        let version = 1;
 
+        while (nameExists) {
+            version++;
+            fileName = version.toString() + fileName;
+            filePath = join(uploadDir, fileName);
+            nameExists = existsSync(filePath);
+        }
+        
         await writeFile(filePath, Buffer.from(fileBuffer));
         
         return new Response(JSON.stringify({
             success: true,
-            filename: uniqueFilename,
-            url: `/chat-media/${uniqueFilename}`,
+            filename: fileName,
+            url: `/chat-media/${fileName}`,
             size: fileSize
         }), {
             headers: { 'Content-Type': 'application/json' }

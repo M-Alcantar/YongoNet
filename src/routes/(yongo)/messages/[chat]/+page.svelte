@@ -6,8 +6,9 @@
 	import { afterNavigate } from '$app/navigation';
     import { enhance } from "$app/forms";
     import type { SubmitFunction } from '@sveltejs/kit';
-    import attach  from '$lib/assets/attach.png';
-    import send  from '$lib/assets/send.png';
+    import attach from '$lib/assets/attach.png';
+    import send from '$lib/assets/send.png';
+    import download from '$lib/assets/download.png';
 
     let { data }: PageProps = $props();
     let chat = $derived(data.chat);
@@ -15,7 +16,6 @@
     
     let newText = $state("");
     let username = data.username ?? "";
-    const extension = /[^.]+$/;
 
     let selectedFile: File | null = $state(null);
     let isUploading = false;
@@ -48,10 +48,10 @@
     });
     
     function handleSend() {
-        if (newText.trim() || uploadResult?.filename) {
+        if (newText.trim() || selectedFile) {
             if (socket && socket.readyState === WebSocket.OPEN) {
                 const newMessage: MessageObj = { sender: username, datetime: Math.floor(Date.now() / 1000), 
-                                                 message: { text: newText, media: uploadResult?.filename ?? "" } };
+                                                 message: { text: newText, media: selectedFile?.name ?? "" } };
                 socket.send(JSON.stringify({ chatUrl: chat, msgType: 'msg', message: newMessage }));
                 messages.push(newMessage);
                 newText = "";
@@ -62,28 +62,25 @@
         }
     }
 
-    const handleSubmit: SubmitFunction = ({ formElement, formData }) => {
+    const handleSubmit: SubmitFunction = () => {
         isUploading = true;
         uploadResult = null;
         
         return async ({ update }) => {
-            try {
-                const response = await fetch(formElement.action, {
-                    method: formElement.method,
-                    body: formData
-                });
-                
-                const result = await response.json();
-                uploadResult = result;
+            if (selectedFile) {
+                try {
+                    handleSend();
+                    update();
+                } catch (error) {
+                    uploadResult = {
+                        success: false,
+                        error: 'Network error occurred'
+                    };
+                } finally {
+                    isUploading = false;
+                }
+            } else {
                 handleSend();
-                update();
-            } catch (error) {
-                uploadResult = {
-                    success: false,
-                    error: 'Network error occurred'
-                };
-            } finally {
-                isUploading = false;
             }
         };
     };
@@ -152,13 +149,15 @@
                                     title={new Date(message.datetime * 1000).toLocaleString()}/>
                             </a>
                         {:else}
-                        <br>
+                        {#if message.message.text === ""}
+                            <br>
+                        {/if}
                             <button 
                                 onclick={() => downloadFile(getMediaUrl(message.message.media), message.message.media)}
-                                class="text-white mt-1.5 px-2 py-1 bg-gray-700 rounded-sm cursor-pointer"
+                                class="flex flex-row text-white mt-1.5 px-2 py-1 h-auto bg-gray-700 rounded-sm cursor-pointer items-center"
                                 title="Download file (at your own risk!!)"
                             >
-                                Download Yongo.{extension.exec(message.message.media)} file
+                                {message.message.media} <img src={download} alt="Download file" class="h-4 ml-1.5 mt-0.5 -mr-1"/>
                             </button>
                         {/if}
                     {/if}
