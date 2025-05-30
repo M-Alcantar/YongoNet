@@ -1,6 +1,6 @@
 {
 	"name": "yongonet",
-	"version": "0.0.1",
+	"version": "0.1.1",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
@@ -48,6 +48,7 @@
 		"@tailwindcss/vite": "^4.0.0",
 		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/svelte": "^5.2.4",
+		"@types/nodemailer": "^6.4.17",
 		"eslint": "^9.18.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.0.0",
@@ -73,10 +74,10 @@
 		"@types/node": "^22.14.0",
 		"basic-ftp": "^5.0.5",
 		"bcryptjs": "^3.0.2",
-		"dotenv": "^16.5.0",
-		"ftp-srv": "^4.6.3",
-		"nodejs": "^0.0.0",
+		"express": "^5.1.0",
+		"nodemailer": "^7.0.3",
 		"postgres": "^3.4.5",
-		"type": "module"
+		"vite-plugin-mkcert": "^1.17.8",
+		"ws": "^8.18.2"
 	}
 }

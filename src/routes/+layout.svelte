@@ -10,17 +10,4 @@
     </style>
 </svelte:head>
 
-<!-- Dev navbar -->
-<nav class="flex w-3/20 bg-[#969696]/40 p-[20px] pl-[40px] absolute bottom-0 left-0 ">
-	<ul class="p-0 list-disc">
-		<li><a href="/">Home</a></li>
-		<li><a href="/playground">Playground</a></li>
-		<li><a href="/playground2">Playground 2</a></li>
-		<li><a href="/register">Sign up</a></li>
-		<li><a href="/login">Log in</a></li>
-		<li><a href="/messages">Messages</a></li>
-	</ul>
-</nav>
-
-
 {@render children()}

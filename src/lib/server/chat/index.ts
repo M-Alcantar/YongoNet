@@ -4,9 +4,6 @@ import { insertDbChat, getDbContacts } from '../db/index.js';
 import type { MessageObj } from '$lib/types/types.js';
 import { getRequestEvent } from '$app/server';
 
-let socketArray: WebSocket[] = []
-let socketListeners: Boolean[] = []
-
 let zeroMessage: MessageObj[] = [ { sender: "", datetime: 0, message: { text: "", media: "" } } ]
 let dir = "src/lib/assets/chat-logs/"
 
@@ -37,7 +34,7 @@ export async function createChat(user1: string, user2: string): Promise<string> 
     } while (await checkUrlExists(url));
 
     const full_url = dir + url + ".json"
-    fs.writeFile(full_url, "", (err) => {
+    fs.writeFile(full_url, "[]", (err) => {
         if (err) {
             console.error('Error creating chat log:', err);
             throw err;

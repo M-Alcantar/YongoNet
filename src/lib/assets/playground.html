@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <title>The Playground</title>
+        <style>
+            body {
+                margin: 0;
+                background-color: #03142b;
+                display: flex;
+                min-height: 90lvh;
+                min-width: 100lvw;
+                position: relative;
+            }
+
+            img {
+                max-width: 60%;
+                max-height: 60%;
+                position: absolute;
+                left: 55%;
+                top: 20%;
+            }
+
+            button {
+                width: 20%;
+                color: white;
+                cursor: pointer;
+                position: absolute;
+                left: 10%;
+                top: 30%;
+                border-radius: 0.8rem;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+                background-color: #00c951;
+            }
+
+            .spinnin {
+                animation: 2s linear 0s infinite normal none running rotate;
+            }
+            @keyframes rotate {
+                0% {
+                    transform: rotate(0);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <button id="pg-button">Ok I wanna see a cool dinosaur</button>
+        <img src="src/lib/assets/dinosaur.jpg" id="pg-img" alt="RAAAAAAARRRRRRRRRRRR" 
+            title="RAAAAAAARRRRRRRRRRRR" class="spinnin" hidden=true>
+    </body>
+</html>

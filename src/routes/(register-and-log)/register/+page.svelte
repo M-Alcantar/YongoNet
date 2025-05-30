@@ -30,6 +30,16 @@
         >
             <div class="space-y-2 rounded-md inset-shadow-xs/40 py-6 bg-[#091d38]">
                 <div>
+                    <label for="usermail" class="sr-only">Mail account (optional)</label>
+                    <input class="flex w-7/8 mx-auto rounded-lg outline-none border-none bg-gray-900 text-white"
+                        id="usermail"
+                        name="usermail"
+                        type="text"
+                        placeholder="Mail account"
+                    />
+                </div>
+
+                <div>
                     <label for="username" class="sr-only">Username</label>
                     <input class="flex w-7/8 mx-auto rounded-lg outline-none border-none bg-gray-900 text-white"
                         id="username"
