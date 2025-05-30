@@ -1,5 +1,5 @@
 import { WebSocketServer } from 'ws';
-import http from 'http';
+import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import url from 'url';
@@ -59,7 +59,7 @@ const mimeTypes = {
     '.png': 'image/png'
 };
 
-const httpServer = http.createServer((req, res) => {
+const httpServer = https.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     // Ruta: /stream/filename.ext
     if (parsedUrl.pathname.startsWith('/stream/')) {

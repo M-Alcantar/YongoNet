@@ -1,6 +1,6 @@
 import type { MessageObj } from '$lib/types/types.js';
 
-export function connectWebSocket(
+export async function connectWebSocket(
     messages: MessageObj[],
     chatUrl: string
 ) {

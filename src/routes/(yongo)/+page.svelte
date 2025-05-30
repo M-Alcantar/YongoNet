@@ -19,12 +19,15 @@
     {/if}
 </p>
 
+<br>
+<br>
 <!-- svelte-ignore a11y-media-has-caption -->
-<video src="http://localhost:5001/stream/Rain.mp4" controls></video>
+<video src="http://localhost:5001/stream/Rain.mp4" controls class="w-1/2 mx-auto rounded-xl"></video>
 <br>
 <embed
   src="http://localhost:5001/stream/dummy.pdf"
   type="application/pdf"
-  width="100%"
+  width="40%"
   height="600px"
+  class="mx-auto"
 />

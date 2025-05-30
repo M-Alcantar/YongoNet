@@ -31,7 +31,9 @@ export const POST = async ({ request }) => {
     try {
         const fileName = fileEntry.name || 'uploaded_file';
         const fileExtension = extname(fileName).toLowerCase();
-        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.pdf', '.txt'];
+        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.pdf', '.txt', 
+                                   '.docx', '.xlsx', '.mp3', '.wav', '.flac', '.avi',
+                                   '.mp4', '.mov', '.webp', '.pptx', '.ogg', '.flv'];
         
         if (!allowedExtensions.includes(fileExtension)) {
             return new Response(JSON.stringify({
@@ -69,7 +71,7 @@ export const POST = async ({ request }) => {
         }
 
         // Use static/uploads for better accessibility
-        const uploadDir = join(process.cwd(), 'static', 'uploads');
+        const uploadDir = join(process.cwd(), 'src/lib/assets/chat-media');
         if (!existsSync(uploadDir)) {
             mkdirSync(uploadDir, { recursive: true });
         }
@@ -82,7 +84,7 @@ export const POST = async ({ request }) => {
         return new Response(JSON.stringify({
             success: true,
             filename: uniqueFilename,
-            url: `/uploads/${uniqueFilename}`,
+            url: `/chat-media/${uniqueFilename}`,
             size: fileSize
         }), {
             headers: { 'Content-Type': 'application/json' }

@@ -22,7 +22,7 @@
 <div class="flex h-[90lvh]">
     <div class="float-left w-3/14 max-w-1/2 h-full pl-5 py-5 space-y-2 bg-transparent text-white">
         <div class="flex mb-3 items-end px-3 font-bold">
-            <p class="flex-1 text-[20px]">Messages</p>
+            <p class="flex-1 text-[20px]">Conversations</p>
             <button class="text-[18px] hover:cursor-pointer" 
                 onclick={ () => {showAbout = !showAbout} } 
                 aria-label="New conversation"
@@ -92,22 +92,20 @@
                         </div>
                     {/if}
 
-                    <div class="mt-4 text-sm leading-relaxed">
-                        <strong>Referencias:</strong><br>
-                        El pepe. <a href="https://www.youtube.com/watch?v=gvf4cnAXYDc" class="underline" target="_blank" rel="noopener noreferrer">Ver PPF</a>
+                    <div class="flex flex-row w-full space-x-2 mt-4">
+                        <button
+                            type="submit"
+                            class="flex-1 px-4 py-2 rounded bg-[#0087e8] hover:bg-[#046bbf] hover:cursor-pointer text-white font-semibold" 
+                        >
+                            Add
+                        </button>
+                        <button
+                            class="flex-1 px-4 py-2 rounded bg-[#0087e8] hover:bg-[#046bbf] hover:cursor-pointer text-white font-semibold"
+                            onclick={ () => {showAbout = !showAbout} } 
+                        >
+                            Cancel
+                        </button>
                     </div>
-                    <button
-                        type="submit"
-                        class="mt-6 px-4 py-2 rounded bg-[#0087e8] hover:bg-[#046bbf] hover:cursor-pointer text-white font-semibold" 
-                    >
-                        Add
-                    </button>
-                    <button
-                        class="mt-6 px-4 py-2 rounded bg-[#0087e8] hover:bg-[#046bbf] hover:cursor-pointer text-white font-semibold"
-                        onclick={ () => {showAbout = !showAbout} } 
-                    >
-                        Cancel
-                    </button>
                 </div>
             </form>
         </div>

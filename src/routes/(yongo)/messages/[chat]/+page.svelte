@@ -4,47 +4,103 @@
     import { connectWebSocket } from '$lib/sockets/index.js';
     import type { MessageObj } from '$lib/types/types.js';
 	import { afterNavigate } from '$app/navigation';
+    import { enhance } from "$app/forms";
+    import type { SubmitFunction } from '@sveltejs/kit';
+    import attach  from '$lib/assets/attach.png';
+    import send  from '$lib/assets/send.png';
 
     let { data }: PageProps = $props();
     let chat = $derived(data.chat);
     let prevChat = data.chat;
+    
+    let newText = $state("");
+    let username = data.username ?? "";
+    const extension = /[^.]+$/;
+
+    let selectedFile: File | null = $state(null);
+    let isUploading = false;
+    let uploadResult: {
+        success: boolean;
+        filename?: string;
+        url?: string;
+        error?: string;
+    } | null = null;
 
     let messages: MessageObj[] = $state<MessageObj[]>(data.messages ?? []);
     let socket: WebSocket;
 
-    onMount(() => {
-        socket = connectWebSocket(messages, chat);
+    onMount(async () => {
+        socket = await connectWebSocket(messages, chat);
     });
 
-    afterNavigate(() => {
+    afterNavigate(async () => {
         if (chat !== prevChat) {
             prevChat = chat;
+            newText = "";
             messages = data.messages ?? [];
             if (socket) socket.close();
-            socket = connectWebSocket(messages, chat);
+            socket = await connectWebSocket(messages, chat);
         }
     });
 
     onDestroy(() => {
         socket?.close();
     });
-
-    let newText = $state("");
-    let newMedia = "";
-    let username = data.username ?? "";
     
     function handleSend() {
-        if (newText.trim() || newMedia !== "") {
+        if (newText.trim() || uploadResult?.filename) {
             if (socket && socket.readyState === WebSocket.OPEN) {
-                const newMessage: MessageObj = { sender: username, datetime: Math.floor(Date.now() / 1000), message: { text: newText, media: newMedia } };
+                const newMessage: MessageObj = { sender: username, datetime: Math.floor(Date.now() / 1000), 
+                                                 message: { text: newText, media: uploadResult?.filename ?? "" } };
                 socket.send(JSON.stringify({ chatUrl: chat, msgType: 'msg', message: newMessage }));
                 messages.push(newMessage);
                 newText = "";
-                newMedia = "";
+                selectedFile = null;
             } else {
                 alert("WebSocket is not connected!");
             }
         }
+    }
+
+    const handleSubmit: SubmitFunction = ({ formElement, formData }) => {
+        isUploading = true;
+        uploadResult = null;
+        
+        return async ({ update }) => {
+            try {
+                const response = await fetch(formElement.action, {
+                    method: formElement.method,
+                    body: formData
+                });
+                
+                const result = await response.json();
+                uploadResult = result;
+                handleSend();
+                update();
+            } catch (error) {
+                uploadResult = {
+                    success: false,
+                    error: 'Network error occurred'
+                };
+            } finally {
+                isUploading = false;
+            }
+        };
+    };
+
+    function downloadFile(url: string, filename?: string) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename || url.split('/').pop() || 'download';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function handleFileChange(event: Event) {
+        const target = event.target as HTMLInputElement;
+        if (!target?.files) return;
+        selectedFile = target.files[0];
     }
 
     var container: HTMLElement | null;
@@ -86,21 +142,60 @@
                     {/if} 
                     {#if message.message.media !== ""}
                         {#if isImage(message.message.media)}
-                            <img src={getMediaUrl(message.message.media)} 
-                                class="max-w-1/2 min-w-[50px] p-0.5 mt-1 rounded-md" alt=""
-                                title={new Date(message.datetime * 1000).toLocaleString()}/>
+                            <a 
+                                href={getMediaUrl(message.message.media)} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                            >
+                                <img src={getMediaUrl(message.message.media)} 
+                                    class="max-w-1/2 min-w-[50px] p-0.5 mt-1 rounded-md" alt=""
+                                    title={new Date(message.datetime * 1000).toLocaleString()}/>
+                            </a>
+                        {:else}
+                        <br>
+                            <button 
+                                onclick={() => downloadFile(getMediaUrl(message.message.media), message.message.media)}
+                                class="text-white mt-1.5 px-2 py-1 bg-gray-700 rounded-sm cursor-pointer"
+                                title="Download file (at your own risk!!)"
+                            >
+                                Download Yongo.{extension.exec(message.message.media)} file
+                            </button>
                         {/if}
                     {/if}
                 </div>
             {/each}
         {/if}
     </div>
-    <div class="flex flex-none w-full rounded-md h-1/15 bg-[#969696]/40 text-white items-center mt-2 pr-3">
+    <div class="flex flex-none w-full rounded-md h-1/15 bg-gray-900 text-white items-center mt-2 pr-3">
+        {#if selectedFile}
+            <div class="p-1 ml-1.5 rounded-sm bg-gray-400/50 text-white text-sm align-center">{selectedFile.name}</div>
+        {/if}
         <input class="flex-1 outline-none border-none bg-transparent text-white focus:ring-transparent focus:ring-offset-0"
 			bind:value={newText}
 			onkeydown={(e) => e.key === 'Enter' && handleSend()}
 			placeholder="Send a message..."
 		/>
-		<button onclick={handleSend}>Send</button>
+        <form
+            method="POST"
+		    action="/api/upload-file"
+            enctype="multipart/form-data"
+            class="flex flex-row h-full items-center"
+            use:enhance={handleSubmit}
+        >
+            <input
+                id="file-upload"
+                name="file"
+                type="file"
+                class="hidden"
+        		onchange={handleFileChange}
+            >
+            <label for="file-upload" class="h-2/3 mr-2.5 cursor-pointer">
+                <img src={attach} title="Attach file" alt="upload-file" class="h-full cursor-pointer">
+            </label>
+            
+		    <button type="submit" class="h-3/4 cursor-pointer mr-0.5">
+                <img src={send} title="Send" alt="send-message" class="h-3/4">
+            </button>
+        </form>
     </div>
 </div>
