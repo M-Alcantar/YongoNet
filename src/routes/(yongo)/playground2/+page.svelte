@@ -11,25 +11,39 @@
         url?: string;
         error?: string;
     } | null = null;
+    let uploadInProgress = false;
 
-    const handleSubmit: SubmitFunction = ({ formElement, formData }) => {
+    const handleSubmit: SubmitFunction = ({ formData, formElement, cancel }) => {
+        // Prevent double submission
+        if (isUploading) {
+            cancel();
+            return;
+        }
+
         isUploading = true;
         uploadResult = null;
-        
+
         return async ({ update }) => {
             try {
                 const response = await fetch(formElement.action, {
                     method: formElement.method,
                     body: formData
                 });
+
+                if (!response.ok) throw new Error('Upload failed');
                 
-                const result = await response.json();
-                uploadResult = result;
+                uploadResult = await response.json();
+                
+                // Clear file input
+                const fileInput = formElement.querySelector('input[type="file"]') as HTMLInputElement;
+                if (fileInput) fileInput.value = '';
+                selectedFile = null;
+                
                 update();
             } catch (error) {
                 uploadResult = {
                     success: false,
-                    error: 'Network error occurred'
+                    error: error instanceof Error ? error.message : 'Upload failed'
                 };
             } finally {
                 isUploading = false;
@@ -62,7 +76,6 @@
         enctype="multipart/form-data"
         use:enhance={handleSubmit}
     >
-        <!-- Rest of your form content remains exactly the same -->
         <div class="file-input-area">
             <label for="file-upload" class:active={selectedFile !== null}>
                 {#if selectedFile}
@@ -81,12 +94,12 @@
                     </span>
                 {/if}
             </label>
-    		<input
-        			id="file-upload"
-        			name="file"
-        			type="file"
-        			on:change={handleFileChange}
-    		/>
+            <input
+                id="file-upload"
+                name="file"
+                type="file"
+                on:change|once={handleFileChange}
+            />
         </div>
 
         <button

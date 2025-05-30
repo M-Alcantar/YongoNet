@@ -6,7 +6,16 @@ import { join } from 'node:path';
 
 export const POST = async ({ request }) => {
     const formData = await request.formData();
-    const fileEntry = formData.get('file');
+    const fileEntries = formData.getAll('file');
+
+        if (fileEntries.length !== 1) {
+            return new Response(JSON.stringify({
+                success: false,
+                error: 'Exactly one file expected'
+            }), { status: 400 });
+        }
+
+        const fileEntry = fileEntries[0];
 
     // Validation checks
     if (!fileEntry) {
@@ -28,6 +37,7 @@ export const POST = async ({ request }) => {
             headers: { 'Content-Type': 'application/json' }
         });
     }
+
 
     try {
         const fileName = fileEntry.name || 'uploaded_file';
@@ -78,6 +88,17 @@ export const POST = async ({ request }) => {
         const uniqueFilename = `${crypto.randomUUID()}${fileExtension}`;
         const filePath = join(uploadDir, uniqueFilename);
 
+        if (existsSync(filePath)) {
+            return new Response(JSON.stringify({
+                success: false,
+                error: 'fileExists',
+                message: 'This file already exists on the server'
+            }), { 
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        
         await writeFile(filePath, Buffer.from(fileBuffer));
         
         return new Response(JSON.stringify({
