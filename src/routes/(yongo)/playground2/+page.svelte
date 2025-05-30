@@ -95,7 +95,7 @@
             class:loading={isUploading}
         >
             {#if isUploading}
-                <span class="spinner" />
+                <span class="spinner"></span>
                 Uploading...
             {:else}
                 Upload File

@@ -7,6 +7,7 @@
 
     let { data }: PageProps = $props();
     let chat = $derived(data.chat);
+    let prevChat = data.chat;
 
     let messages: MessageObj[] = $state<MessageObj[]>(data.messages ?? []);
     let socket: WebSocket;
@@ -16,13 +17,12 @@
     });
 
     afterNavigate(() => {
-        messages = data.messages ?? [];
-        if (socket) socket.close();
-        socket = connectWebSocket(messages, chat);
-
-        return () => {
-            socket?.close();
-        };
+        if (chat !== prevChat) {
+            prevChat = chat;
+            messages = data.messages ?? [];
+            if (socket) socket.close();
+            socket = connectWebSocket(messages, chat);
+        }
     });
 
     onDestroy(() => {
@@ -34,14 +34,18 @@
     let username = data.username ?? "";
     
     function handleSend() {
-		if (newText.trim() || newMedia !== "") {
-            const newMessage: MessageObj = { sender: username, datetime: Math.floor(Date.now() / 1000), message: { text: newText, media: newMedia } };
-			socket.send(JSON.stringify({ chatUrl: chat, msgType: 'msg', message: newMessage }));
-            messages.push(newMessage);
-			newText = "";
-            newMedia = "";
-		}
-	}
+        if (newText.trim() || newMedia !== "") {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const newMessage: MessageObj = { sender: username, datetime: Math.floor(Date.now() / 1000), message: { text: newText, media: newMedia } };
+                socket.send(JSON.stringify({ chatUrl: chat, msgType: 'msg', message: newMessage }));
+                messages.push(newMessage);
+                newText = "";
+                newMedia = "";
+            } else {
+                alert("WebSocket is not connected!");
+            }
+        }
+    }
 
     var container: HTMLElement | null;
     var observer: MutationObserver;
