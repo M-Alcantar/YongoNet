@@ -1,4 +1,7 @@
-<script>
+<script lang="ts">
+    export let data: {
+        userIp: string | null
+    };
     
 </script>
 
@@ -7,8 +10,9 @@
 </svelte:head>
 
 <br>
-<p style="text-align:center">
-    <a href="https://www.youtube.com/watch?v=gvf4cnAXYDc" class="text-white" target="_blank" rel="noopener noreferrer">
-        START CODING
-    </a>
-</p>
+    <strong>Welcome to YongoNet!</strong>
+{#if data.userIp}
+    <p>Tu IP: {data.userIp}</p>
+{:else}
+    <p>No se pudo obtener tu IP.</p>
+{/if}
