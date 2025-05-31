@@ -40,6 +40,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>The Playground</title>
+</svelte:head>
+
 <div class="w-[100vw] min-h-[90vh]">
     {@html content}
 </div>
